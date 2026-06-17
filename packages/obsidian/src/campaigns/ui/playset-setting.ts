@@ -261,8 +261,8 @@ export class PlaysetSetting {
                 >Buy</a
               >
               -
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0"
-                >CC BY-NC-SA 4.0</a
+              <a href="https://creativecommons.org/licenses/by/4.0"
+                >CC BY 4.0</a
               >`,
             frag,
           );
@@ -294,8 +294,8 @@ export class PlaysetSetting {
                 >Buy</a
               >
               -
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0"
-                >CC BY-NC-SA 4.0</a
+              <a href="https://creativecommons.org/licenses/by/4.0"
+                >CC BY 4.0</a
               >`,
             frag,
           );
@@ -394,8 +394,8 @@ export class PlaysetSetting {
                 >Buy</a
               >
               -
-              <a href="https://creativecommons.org/licenses/by-nc-sa/4.0"
-                >CC BY-NC-SA 4.0</a
+              <a href="https://creativecommons.org/licenses/by/4.0"
+                >CC BY 4.0</a
               >`,
             frag,
           );
