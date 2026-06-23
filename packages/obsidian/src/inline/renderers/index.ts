@@ -32,6 +32,7 @@ import {
   renderInlineDiceRoll,
   renderInlineActionRoll,
   renderInlineReroll,
+  renderInlineOutcome,
 } from "./dice";
 import { renderInlineOOC } from "./ooc";
 
@@ -111,6 +112,8 @@ export function renderParsedInline(
       return renderInlineActionRoll(parsed, plugin);
     case "reroll":
       return renderInlineReroll(parsed, plugin);
+    case "outcome":
+      return renderInlineOutcome(parsed, plugin);
     case "ooc":
       return renderInlineOOC(parsed, plugin);
   }

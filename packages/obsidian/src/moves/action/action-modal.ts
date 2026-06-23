@@ -25,6 +25,7 @@ import { ActionMoveWrapper, formatRollResult } from "../wrapper";
 import {
   parseInlineMechanics,
   rerollToInlineSyntax,
+  rollOutcomeToInlineSyntax,
   ParsedInlineMove,
   ParsedInlineActionRoll,
 } from "../../inline/syntax";
@@ -267,12 +268,19 @@ export async function changeRollOutcome(
     properties: props,
   });
 
-  appendNodesToMoveOrMechanicsBlockWithActor(
-    editor,
-    plugin,
-    actionContext,
-    rollOutcomeNode,
-  );
+  if (plugin.settings.useInlineMechanics) {
+    if (findPrecedingInlineRoll(editor) != null) {
+      const inlineText = rollOutcomeToInlineSyntax(outcome, reason);
+      insertInlineText(editor, inlineText);
+    }
+  } else {
+    appendNodesToMoveOrMechanicsBlockWithActor(
+      editor,
+      plugin,
+      actionContext,
+      rollOutcomeNode,
+    );
+  }
 }
 
 /**

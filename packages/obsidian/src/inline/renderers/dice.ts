@@ -9,6 +9,7 @@ import {
   ParsedInlineDiceRoll,
   ParsedInlineActionRoll,
   ParsedInlineReroll,
+  ParsedInlineOutcome,
   determineOutcome,
   outcomeText,
   formatAddsForDisplay,
@@ -223,6 +224,30 @@ export function renderInlineReroll(
   setTooltip(
     container,
     `${outcomeText(outcome)}${match ? " (match)" : ""}\nRerolled ${dieFullLabel}: ${parsed.oldVal} → ${parsed.newVal}`,
+  );
+
+  return container;
+}
+
+/**
+ * Render an inline roll outcome change.
+ */
+export function renderInlineOutcome(
+  parsed: ParsedInlineOutcome,
+  _plugin: IronVaultPlugin,
+): HTMLSpanElement {
+  const container = createContainer(parsed.outcome);
+
+  const iconEl = createSpan({ cls: "iv-inline-reroll-icon" });
+  setIcon(iconEl, "shell");
+  container.appendChild(iconEl);
+
+  container.appendChild(createSpan({ cls: "iv-inline-outcome-icon" }));
+  container.appendChild(createSpan({ text: outcomeText(parsed.outcome) }));
+
+  setTooltip(
+    container,
+    `Changed to ${outcomeText(parsed.outcome)}${parsed.reason ? ` (${parsed.reason})` : ""}`,
   );
 
   return container;

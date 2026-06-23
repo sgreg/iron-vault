@@ -1401,6 +1401,63 @@ describe("parseInlineMechanics extended - reroll", () => {
 });
 
 // ============================================================================
+// Change Outcome Tests
+// ============================================================================
+
+import { parseOutcomeInline, rollOutcomeToInlineSyntax } from "./syntax";
+
+describe("parseOutcomeInline", () => {
+  it("parses changed outcome without reason", () => {
+    const result = parseOutcomeInline("iv-outcome:miss");
+    expect(result).toEqual({
+      type: "outcome",
+      outcome: "miss",
+      reason: undefined,
+    });
+  });
+
+  it("parses changed outcome with reason", () => {
+    const result = parseOutcomeInline("iv-outcome:strong-hit|a good reason");
+    expect(result).toEqual({
+      type: "outcome",
+      outcome: "strong-hit",
+      reason: "a good reason",
+    });
+  });
+
+  it("returns null for invalid outcome", () => {
+    expect(
+      parseRerollInline("iv-outcome:invalid|still a good reason"),
+    ).toBeNull();
+  });
+});
+
+describe("rollOutcomeToInlineSyntax", () => {
+  it("generates outcome syntax without reason", () => {
+    const result = rollOutcomeToInlineSyntax("weak-hit");
+    expect(result).toBe("`iv-outcome:weak-hit`");
+  });
+
+  it("generates outcome syntax with reason", () => {
+    const result = rollOutcomeToInlineSyntax("weak-hit", "reason");
+    expect(result).toBe("`iv-outcome:weak-hit|reason`");
+  });
+});
+
+describe("isInlineMechanics extended - outcome", () => {
+  it("returns true for outcome syntax", () => {
+    expect(isInlineMechanics("iv-outcome:weak-hit|reason")).toBe(true);
+  });
+});
+
+describe("parseInlineMechanics extended - outcome", () => {
+  it("parses outcome", () => {
+    const result = parseInlineMechanics("iv-outcome:strong-hit");
+    expect(result?.type).toBe("outcome");
+  });
+});
+
+// ============================================================================
 // OOC (Out-of-Character) Comment Tests
 // ============================================================================
 
