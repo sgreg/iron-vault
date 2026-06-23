@@ -1,0 +1,15 @@
+.iron-vault-mechanics dl.outcome {
+  &:before {
+    content: "🌀";
+  }
+  & dd {
+    &.reason {
+      &:before {
+        content: " (";
+      }
+      &:after {
+        content: ")";
+      }
+    }
+  }
+}

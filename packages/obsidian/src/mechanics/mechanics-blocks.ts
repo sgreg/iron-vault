@@ -311,6 +311,9 @@ See https://kdl.dev for syntax.</pre
       case "reroll": {
         return this.renderReroll(node);
       }
+      case "outcome": {
+        return this.renderOutcome(node);
+      }
       case "meter": {
         return this.renderMeter(node);
       }
@@ -793,6 +796,46 @@ ${result.error.toString()}</pre
     def["Outcome"] = { cls: "outcome", value: outcome, dataProp: false };
     this.setMoveHit(outcomeClass, match);
     return this.renderDlist("reroll " + outcomeClass, def, node);
+  }
+
+  renderOutcome(node: KdlNode) {
+    if (!this.lastRoll) {
+      return html`<p>No previous roll to change the outcome for.</p>`;
+    }
+
+    const outcome = node.values[0] as string;
+    const reason = node.properties.reason as string;
+
+    let outcomeText: string;
+    switch (outcome) {
+      case "strong-hit":
+        outcomeText = "Strong hit";
+        break;
+      case "weak-hit":
+        outcomeText = "Weak hit";
+        break;
+      case "miss":
+        outcomeText = "Miss";
+        break;
+      default:
+        console.warn(`Unknown outcome ${outcome}`);
+        outcomeText = "Unknown";
+        break;
+    }
+
+    const match =
+      this.lastRoll.properties.vs1 === this.lastRoll.properties.vs2 &&
+      outcome != "weak-hit";
+    this.setMoveHit(outcome, match);
+
+    const def: DataList = {
+      Outcome: { cls: "outcome", value: outcomeText },
+    };
+    if (reason) {
+      def["Reason"] = { cls: "reason", value: reason, md: true };
+    }
+
+    return this.renderDlist("outcome " + outcome, def, node);
   }
 
   renderAsset(node: KdlNode) {

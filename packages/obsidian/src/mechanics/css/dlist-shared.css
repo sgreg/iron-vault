@@ -62,19 +62,22 @@
   }
   &.strong-hit {
     & dd.score,
-    & dd.progress-score {
+    & dd.progress-score,
+    & dd.outcome {
       color: var(--text-success);
     }
   }
   &.weak-hit {
     & dd.score,
-    & dd.progress-score {
+    & dd.progress-score,
+    & dd.outcome {
       color: var(--text-warning);
     }
   }
   &.miss {
     & dd.score,
-    & dd.progress-score {
+    & dd.progress-score,
+    & dd.outcome {
       color: var(--text-error);
     }
   }

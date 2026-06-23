@@ -231,6 +231,50 @@ export async function rerollDie(
   );
 }
 
+export async function changeRollOutcome(
+  plugin: IronVaultPlugin,
+  editor: Editor,
+  view: MarkdownView | MarkdownFileInfo,
+) {
+  const actionContext = await determineCharacterActionContext(plugin, view);
+
+  const outcome: "strong-hit" | "weak-hit" | "miss" =
+    await CustomSuggestModal.select(
+      plugin.app,
+      ["strong-hit", "weak-hit", "miss"],
+      (item) =>
+        item === "strong-hit"
+          ? "Strong hit"
+          : item === "weak-hit"
+            ? "Weak hit"
+            : "Miss",
+      undefined,
+      "Select the move's new outcome",
+    );
+
+  const reason = await PromptModal.prompt(
+    plugin.app,
+    "(Optional) Provide a reason for the outcome change",
+  );
+
+  const props: { reason?: string } = {};
+  if (reason) {
+    props.reason = reason;
+  }
+
+  const rollOutcomeNode = node("outcome", {
+    values: [outcome],
+    properties: props,
+  });
+
+  appendNodesToMoveOrMechanicsBlockWithActor(
+    editor,
+    plugin,
+    actionContext,
+    rollOutcomeNode,
+  );
+}
+
 /**
  * Search backwards from cursor to find the most recent inline roll (iv-move or iv-action-roll).
  * Returns the parsed data if found, null otherwise.
