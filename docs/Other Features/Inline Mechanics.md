@@ -441,6 +441,29 @@ Records rerolling a die from a previous roll.
 
 ---
 
+#### Outcome (`iv-outcome`)
+
+Records changing the overall outcome of a previous roll.
+
+**Syntax:**
+```
+`iv-outcome:<outcome>[|<reason>]`
+```
+
+**Parameters:**
+- `outcome` - The new roll outcome, one of `strong-hit`, `weak-hit`, or `miss`
+- `reason` (optional) - The reason for the outcome change
+
+**Examples:**
+`iv-outcome:strong-hit|Fugitive asset`
+`iv-outcome:weak-hit`
+
+**Display:** Shows shell icon, outcome icon, and the new outcome text.
+
+**Tooltip:** Shows outcome text and, if given, the reason.
+
+---
+
 ### Comments
 
 #### Out-of-Character (`iv-ooc`)

@@ -244,6 +244,45 @@ move "Face Danger" {
 ```
 ````
 
+#### `outcome`
+
+Sets the outcome of a previous action or progress roll to override the roll result when a move or an asset allows / requires you to.
+If used inside a move, the move's result will be automatically updated.
+It's an error to use this if there's no previous roll in the current Mechanics Block.
+
+##### Arguments
+
+- `outcome`: the new roll outcome, one of `strong-hit`, `weak-hit`, or `miss`
+- `reason` (optional, md): the reason for the outcome change
+
+##### Example
+
+```iron-vault-mechanics
+move "Face Danger" {
+    roll action=3 stat=1 adds=0 vs1=6 vs2=9
+    outcome "strong-hit" reason="Fugitive asset"
+}
+move "Take Decisive Action" {
+    // Position: in a bad spot
+    progress-roll name="The Ultimate Combat" score=6 vs1=3 vs2=2
+    outcome "weak-hit"
+}
+```
+
+````kdl
+```iron-vault-mechanics
+move "Face Danger" {
+    roll action=3 stat=1 adds=0 vs1=6 vs2=9
+    outcome "strong-hit" reason="Fugitive asset"
+}
+move "Take Decisive Action" {
+    // Position: in a bad spot
+    progress-roll name="The Ultimate Combat" score=6 vs1=3 vs2=2
+    outcome "weak-hit"
+}
+```
+````
+
 #### `meter`
 
 Shows meter changes.

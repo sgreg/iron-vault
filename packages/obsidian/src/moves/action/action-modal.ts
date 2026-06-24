@@ -25,6 +25,7 @@ import { ActionMoveWrapper, formatRollResult } from "../wrapper";
 import {
   parseInlineMechanics,
   rerollToInlineSyntax,
+  rollOutcomeToInlineSyntax,
   ParsedInlineMove,
   ParsedInlineActionRoll,
 } from "../../inline/syntax";
@@ -229,6 +230,57 @@ export async function rerollDie(
     actionContext,
     rerollNode,
   );
+}
+
+export async function changeRollOutcome(
+  plugin: IronVaultPlugin,
+  editor: Editor,
+  view: MarkdownView | MarkdownFileInfo,
+) {
+  const actionContext = await determineCharacterActionContext(plugin, view);
+
+  const outcome: "strong-hit" | "weak-hit" | "miss" =
+    await CustomSuggestModal.select(
+      plugin.app,
+      ["strong-hit", "weak-hit", "miss"],
+      (item) =>
+        item === "strong-hit"
+          ? "Strong hit"
+          : item === "weak-hit"
+            ? "Weak hit"
+            : "Miss",
+      undefined,
+      "Select the move's new outcome",
+    );
+
+  const reason = await PromptModal.prompt(
+    plugin.app,
+    "(Optional) Provide a reason for the outcome change",
+  );
+
+  const props: { reason?: string } = {};
+  if (reason) {
+    props.reason = reason;
+  }
+
+  const rollOutcomeNode = node("outcome", {
+    values: [outcome],
+    properties: props,
+  });
+
+  if (plugin.settings.useInlineMechanics) {
+    if (findPrecedingInlineRoll(editor) != null) {
+      const inlineText = rollOutcomeToInlineSyntax(outcome, reason);
+      insertInlineText(editor, inlineText);
+    }
+  } else {
+    appendNodesToMoveOrMechanicsBlockWithActor(
+      editor,
+      plugin,
+      actionContext,
+      rollOutcomeNode,
+    );
+  }
 }
 
 /**

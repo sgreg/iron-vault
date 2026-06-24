@@ -207,6 +207,12 @@ export interface ParsedInlineReroll {
   action: number;
 }
 
+export interface ParsedInlineOutcome {
+  type: "outcome";
+  outcome: "strong-hit" | "weak-hit" | "miss";
+  reason?: string;
+}
+
 export interface ParsedInlineOOC {
   type: "ooc";
   /** The out-of-character comment text */
@@ -232,6 +238,7 @@ export type ParsedInlineMechanics =
   | ParsedInlineDiceRoll
   | ParsedInlineActionRoll
   | ParsedInlineReroll
+  | ParsedInlineOutcome
   | ParsedInlineOOC;
 
 const MOVE_PREFIX = "iv-move:";
@@ -254,6 +261,7 @@ const ENTITY_CREATE_PREFIX = "iv-entity-create:";
 const DICE_ROLL_PREFIX = "iv-dice:";
 const ACTION_ROLL_PREFIX = "iv-action-roll:";
 const REROLL_PREFIX = "iv-reroll:";
+const OUTCOME_PREFIX = "iv-outcome:";
 const OOC_PREFIX = "iv-ooc:";
 
 /**
@@ -510,6 +518,9 @@ export function parseInlineMechanics(
   if (text.startsWith(REROLL_PREFIX)) {
     return parseRerollInline(text);
   }
+  if (text.startsWith(OUTCOME_PREFIX)) {
+    return parseOutcomeInline(text);
+  }
   if (text.startsWith(OOC_PREFIX)) {
     return parseOOCInline(text);
   }
@@ -539,6 +550,7 @@ export function isInlineMechanics(text: string): boolean {
     text.startsWith(DICE_ROLL_PREFIX) ||
     text.startsWith(ACTION_ROLL_PREFIX) ||
     text.startsWith(REROLL_PREFIX) ||
+    text.startsWith(OUTCOME_PREFIX) ||
     text.startsWith(OOC_PREFIX)
   );
 }
@@ -1374,6 +1386,45 @@ export function rerollToInlineSyntax(
 ): string {
   const parts = [die, oldVal, newVal, stat, statVal, adds, vs1, vs2, action];
   return `\`${REROLL_PREFIX}${parts.join("|")}\``;
+}
+
+// ============================================================================
+// Outcome Parsing and Generation
+// ============================================================================
+
+/**
+ * Parse inline outcome syntax.
+ * Format: `iv-outcome:<outcome>|<reason>` or `iv-outcome:<outcome>`
+ */
+export function parseOutcomeInline(text: string): ParsedInlineOutcome | null {
+  if (!text.startsWith(OUTCOME_PREFIX)) return null;
+
+  const content = text.slice(OUTCOME_PREFIX.length);
+  const parts = content.split("|");
+
+  if (parts.length < 1) return null;
+
+  const outcome = parts[0];
+  const reason: string | undefined = parts.length > 1 ? parts[1] : undefined;
+
+  return {
+    type: "outcome",
+    outcome: outcome as "strong-hit" | "weak-hit" | "miss",
+    reason: reason,
+  };
+}
+
+/**
+ * Generate inline syntax for reroll.
+ */
+export function rollOutcomeToInlineSyntax(
+  outcome: "strong-hit" | "weak-hit" | "miss",
+  reason?: string,
+): string {
+  if (reason) {
+    return `\`${OUTCOME_PREFIX}${outcome}|${reason}\``;
+  }
+  return `\`${OUTCOME_PREFIX}${outcome}\``;
 }
 
 // ============================================================================

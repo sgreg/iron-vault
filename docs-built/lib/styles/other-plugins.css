@@ -533,19 +533,22 @@
   }
   &.strong-hit {
     & dd.score,
-    & dd.progress-score {
+    & dd.progress-score,
+    & dd.outcome {
       color: var(--text-success);
     }
   }
   &.weak-hit {
     & dd.score,
-    & dd.progress-score {
+    & dd.progress-score,
+    & dd.outcome {
       color: var(--text-warning);
     }
   }
   &.miss {
     & dd.score,
-    & dd.progress-score {
+    & dd.progress-score,
+    & dd.outcome {
       color: var(--text-error);
     }
   }
@@ -702,6 +705,23 @@
     }
     &.outcome {
       display: none;
+    }
+  }
+}
+
+/* src/mechanics/css/dlist-outcome.css */
+.iron-vault-mechanics dl.outcome {
+  &:before {
+    content: "\1f300";
+  }
+  & dd {
+    &.reason {
+      &:before {
+        content: " (";
+      }
+      &:after {
+        content: ")";
+      }
     }
   }
 }

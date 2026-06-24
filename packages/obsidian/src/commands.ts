@@ -14,7 +14,7 @@ import IronVaultPlugin from "index";
 import { insertComment, rollDice } from "mechanics/commands";
 import { checkIfMigrationNeededCommand } from "migrate/command";
 import { makeActionRollCommand, runMoveCommand } from "moves/action";
-import { rerollDie } from "moves/action/action-modal";
+import { changeRollOutcome, rerollDie } from "moves/action/action-modal";
 import {
   Command,
   Editor,
@@ -176,6 +176,13 @@ export class IronVaultCommands {
       icon: "dice",
       editorCallback: (editor: Editor, view) =>
         rerollDie(this.plugin, editor, view),
+    },
+    {
+      id: "change-roll-outcome",
+      name: "Change roll outcome",
+      icon: "shell",
+      editorCallback: (editor: Editor, view) =>
+        changeRollOutcome(this.plugin, editor, view),
     },
 
     /*
